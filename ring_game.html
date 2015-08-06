@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<head>
+	<script src="bonsai-0.4.1.min.js"></script>
+</head>
+<body>
+	<div id="movie"></div>
+</body>
+<script>
+	bonsai.run(document.getElementById('movie'), {
+	code: function() {
+		var backgroundColor = 'rgba(3, 7, 41, 1)';
+		var circleColor = 'rgba(65, 209, 109, 1)';
+		//new Rect(0,0,900,500).fill('white').addTo(stage);
+		stage.setBackgroundColor(backgroundColor)
+  		var ringX = Math.random()*900;
+  		var ringY = Math.random()*500;
+		//var ring = new Group().addTo(stage);
+		var ringOuter = new Circle(ringX, ringY, 50).addTo(stage).fill('white');
+		var ringInner = new Circle(ringX, ringY, 45).addTo(stage).fill(backgroundColor);
+		
+		var c = new Circle(50, 50, 30).addTo(stage).fill(circleColor)
+		var scoreCount = 0;
+		var scoreLabel = new Text('Score: '+scoreCount).addTo(stage).attr({
+		  fontFamily: 'Trebuchet MS, Helvetica, sans-serif',
+		  fontSize: '20',
+		  textFillColor: 'white',
+		  //textStrokeColor: 'rgba(42, 56, 190, 1)',
+		  //textStrokeWidth: .3,
+		  x: 10,
+		  y: 10
+		});
+
+		function collide(){
+			return Math.sqrt(Math.pow((c.attr("x")-ringX),2)+Math.pow((c.attr("y")-ringY),2))<50;
+		}
+		function moveRing(){
+			/*
+			ring.attr("x", Math.random()*900);
+			ring.attr("y", Math.random()*500);
+			*/
+			ringX = Math.random()*900;
+			ringY = Math.random()*500;
+			ringOuter.attr("x", ringX);
+			ringInner.attr("x", ringX);
+			ringOuter.attr("y", ringY);
+			ringInner.attr("y", ringY);
+		}
+
+		function hitRing(){
+			if(collide()){
+				scoreCount++;	
+				scoreLabel.attr("text", "Score: "+scoreCount);
+				moveRing();
+			}
+		}
+
+
+  		stage.on('key', function(e) {
+  			switch(e.keyCode){
+  				//e
+				case 101:
+  					hitRing();
+				break;
+  				//w
+  				case 119:
+  				c.animate('700ms', {
+				  y: (c.attr("y")-100)
+				});
+				break;
+				//a
+  				case 97:
+				c.animate('700ms', {
+				  x: (c.attr("x")-100)
+				});
+
+  				break;
+  				//s
+  				case 115:
+				c.animate('700ms', {
+				  y: (c.attr("y")+100)
+				});
+
+  				break;
+  				//d
+  				case 100:
+				c.animate('700ms', {
+				  x: (c.attr("x")+100)
+				});
+  				break;
+  			}
+		});
+	}});
+</script>
